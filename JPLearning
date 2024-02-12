@@ -1,0 +1,73 @@
+pip install opencv-python
+
+import cv2
+import random
+from google.colab.patches import cv2_imshow
+
+#--------建立日文資料庫----------
+
+Dic1={"あ":"ア","い":"イ","う":"ウ","え":"エ","お":"オ",
+"か":"カ","き":"キ","く":"ク","け":"ケ","こ":"コ",
+"さ":"サ","し":"シ","す":"ス","せ":"セ","そ":"ソ",
+"た":"タ","ち":"チ","つ":"ツ","て":"テ","と":"ト",
+"な":"ナ","に":"ニ","ぬ":"ヌ","ね":"ネ","の":"ノ",
+"は":"ハ","ひ":"ヒ","ふ":"フ","へ":"ヘ","ほ":"ホ",
+"ま":"マ","み":"ミ","む":"ム","め":"メ","も":"モ",
+"や":"ヤ","ゆ":"ユ","よ":"ヨ",
+"ら":"ラ","り":"リ","る":"ル","れ":"レ","ろ":"ロ",
+"わ":"ワ","を":"ヲ","ん":"ン"}
+
+Dic2 = Dic1
+print(Dic2)
+
+#----------家載圖片並修訂格式-------------
+
+def show_image(character):
+    # 根据输入的字符加载对应的图片
+    image_path = character + ".jpg"  # 假设图片都是以字符命名的
+    image = cv2.imread(image_path)
+
+    if image is not None:
+        # 将图像大小减半
+        new_width = image.shape[1] // 4
+        new_height = image.shape[0] // 4
+        resized_image = cv2.resize(image, (new_width, new_height))
+
+        # 使用cv2_imshow()函数显示图像
+        cv2_imshow(resized_image)
+    else:
+        print("找不到图片:", image_path)
+
+#-----------隨機讀取並顯示，若知道此字輸入1，若不知道則輸入2-----------------
+
+for _ in range(len(Dic2)):
+    random_key = random.choice(list(Dic2.keys()))
+    random_value = Dic2[random_key]
+
+    print(f'片假名：{random_value}')
+    if __name__ == "__main__":
+      character = random_value
+      show_image(character)
+
+    check_input = input('請思考一下，然後按下 Enter 鍵顯示對應的平假名。')
+    print(f'其平假名為：{random_key}，你答對了嗎？')
+    if __name__ == "__main__":
+      character = random_key
+      show_image(character)
+
+    while True:
+
+        user_input = input('是否答對上述的詞？ (はい：1/いいえ：2): ')
+
+        if user_input.lower() == '1':
+            del Dic2[random_key]
+            print('おめでとう，邁向下一題 ! ! !')
+            break
+        elif user_input.lower() == '2':
+            print('頑張ってください，繼續下一題 ! ! !')
+            break
+        else:
+            print('請輸入有效的選項，重新輸入1或2。')
+
+if not Dic2:
+    print("おつかれさま！你完成所有練習了")
